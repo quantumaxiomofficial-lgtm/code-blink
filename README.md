@@ -11,15 +11,28 @@
 - **Configurable** via `~/.config/code-blink/config.toml`
 - **Headless mode** — `code-blink run "task"` for non-interactive use, `--autonomous` for multi-turn completion
 
-## Quick Start
+## Installation
 
 ```bash
-pip install textual httpx pydantic platformdirs rich ddgs
-code-blink                   # launch TUI
+git clone https://github.com/quantumaxiomofficial-lgtm/code-blink.git
+cd code-blink
+pip install -e .
+code-blink                    # launch TUI
 code-blink run "do something" --autonomous
 ```
 
-Requires Python >= 3.10 and a running Ollama/LMStudio server.
+Requires **Python >= 3.10** and a running **Ollama** (or LMStudio) server on `http://localhost:11434`.
+
+### Dependencies (installed automatically by `pip install -e .`)
+
+- `textual` — TUI framework
+- `httpx` — HTTP client for Ollama/LMStudio API
+- `pydantic` — config schema
+- `platformdirs` — config file paths
+- `rich` — terminal output + Markdown rendering
+- `ddgs` — DuckDuckGo search tool
+
+> **Windows note**: uses Windows PowerShell 5.1 as the shell backend. Install via `winget install Git.Git` + `winget install Python.Python.3.12` if starting fresh.
 
 ## Usage
 
