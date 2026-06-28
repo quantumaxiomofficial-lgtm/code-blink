@@ -1,0 +1,22 @@
+Metadata-Version: 2.4
+Name: code-blink
+Version: 0.1.0
+Summary: A local-first, open-source AI coding agent with Ollama/LMStudio
+Author: Code Blink Contributors
+License: MIT
+Classifier: Development Status :: 3 - Alpha
+Classifier: Environment :: Console
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Topic :: Software Development :: Code Generators
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+Requires-Dist: textual>=0.47
+Requires-Dist: httpx>=0.27
+Requires-Dist: pydantic>=2.0
+Requires-Dist: platformdirs>=4.0
+Requires-Dist: tomli>=2.0; python_version < "3.11"
+Requires-Dist: rich>=13.0
+Requires-Dist: ddgs>=9.0
