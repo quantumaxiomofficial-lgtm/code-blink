@@ -18,7 +18,8 @@ git clone https://github.com/quantumaxiomofficial-lgtm/code-blink.git
 cd code-blink
 pip install -e .
 code-blink                    # launch TUI
-code-blink run "do something" --autonomous
+code-blink run "do something" --autonomous # (Kinda broken)
+code-blink --model gemma4:31b-cloud # Before using this command do this to set your provider: code-blink --provider [ollama/lmstudio]
 ```
 
 Requires **Python >= 3.10** and a running **Ollama** (or LMStudio) server on `http://localhost:11434`.
