@@ -11,7 +11,7 @@ requires-python = ">=3.10"
 license = {text = "MIT"}
 
 authors = [
-    {name = "Code Blink Contributors"},
+    {name = "Sato Imasu"},
 ]
 
 classifiers = [
