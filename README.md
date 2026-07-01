@@ -7,7 +7,7 @@
 - **Purple/black Gemini-themed TUI** built with Textual/Rich
 - **Agentic loop** — the AI can read, write, edit, glob, grep, list files, **run shell commands**, and search the web autonomously
 - **Live streaming UI** — real-time token display, `<thinking>` blocks (grey italic), diff views (red/green), and tool call results
-- **Multi-provider** — Ollama (default) and LMStudio support via OpenAI-compatible API
+- **Multi-provider** — Ollama (default), LMStudio, and **OpenRouter** (cloud) via OpenAI-compatible API
 - **Configurable** via `~/.config/code-blink/config.toml`
 - **Headless mode** — `code-blink run "task"` for non-interactive use, `--autonomous` for multi-turn completion
 
@@ -21,16 +21,16 @@ code-blink                    # launch TUI
 code-blink run "do something" --autonomous
 ```
 
-Requires **Python >= 3.10** and a running **Ollama** (or LMStudio) server on `http://localhost:11434`.
+Requires **Python >= 3.10**. You need a running provider — **Ollama** (default, `http://localhost:11434`), **LMStudio** (`http://localhost:1234/v1`), or **OpenRouter** (cloud, requires API key).
 
 ### Dependencies (installed automatically by `pip install -e .`)
 
 - `textual` — TUI framework
-- `httpx` — HTTP client for Ollama/LMStudio API
+- `httpx` — HTTP client for provider APIs
 - `pydantic` — config schema
-- `platformdirs` — config file paths
 - `rich` — terminal output + Markdown rendering
 - `ddgs` — DuckDuckGo search tool
+- `tomli` — TOML parsing (Python < 3.11 only; stdlib `tomllib` used on 3.11+)
 
 > **Windows note**: uses Windows PowerShell 5.1 as the shell backend. Install via `winget install Git.Git` + `winget install Python.Python.3.12` if starting fresh.
 
@@ -83,12 +83,19 @@ shell_exec = true
 max_retries = 3
 max_context_percent = 70
 autonomous = false
+auto_continue = false
+verbose_thinking = true
+
+[sandbox]
+enabled = true
+temp_workspace = false
+workspace_path = ""
 ```
 
 ## How It Works
 
 1. **Agent Loop** (`agent/loop.py`) — multi-turn tool-use loop, `max_iterations` guard, `<thinking>` tag extraction
-2. **Provider** (`provider/ollama.py`, `provider/lmstudio.py`) — streaming chat completion via OpenAI-compatible API, tool call serialization
+2. **Provider** (`provider/ollama.py`, `provider/lmstudio.py`, `provider/openrouter.py`) — streaming chat completion via OpenAI-compatible API, tool call serialization
 3. **Tools** (`tools/`) — `read`, `write`, `edit`, `glob`, `grep`, `ls`, `tree` (`file_ops.py`), `shell` (`shell.py`, blocked from destructive commands), `web_search` / `web_fetch` (`web_search.py`)
 4. **TUI** (`tui/`) — Textual app with live streaming widgets (`StreamingText`, `ThinkingBlock`, `DiffBlock`)
 5. **System prompt** — instructs the model to wrap reasoning in `<thinking>...</thinking>` and put the final answer after the closing tag
@@ -99,7 +106,7 @@ autonomous = false
 src/code_blink/
 ├── agent/         — AgentLoop, system prompt, tag parsing, multi-turn loop
 ├── config/        — TOML config loading, schema, defaults
-├── provider/      — Ollama & LMStudio providers, base classes, registry
+├── provider/      — Ollama, LMStudio & OpenRouter providers, base classes, registry
 ├── tools/         — file_ops, shell (safe command exec), web_search, permission layer
 ├── tui/           — Textual app, chat screen, custom widgets (StreamingText, DiffBlock, ThinkingBlock)
 ├── session/       — Session store
