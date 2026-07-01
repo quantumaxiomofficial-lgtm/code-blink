@@ -5,7 +5,7 @@
 ## Features
 
 - **Purple/black Gemini-themed TUI** built with Textual/Rich
-- **Agentic loop** — the AI can read, write, edit, glob, grep, and list files autonomously
+- **Agentic loop** — the AI can read, write, edit, glob, grep, list files, **run shell commands**, and search the web autonomously
 - **Live streaming UI** — real-time token display, `<thinking>` blocks (grey italic), diff views (red/green), and tool call results
 - **Multi-provider** — Ollama (default) and LMStudio support via OpenAI-compatible API
 - **Configurable** via `~/.config/code-blink/config.toml`
@@ -18,8 +18,7 @@ git clone https://github.com/quantumaxiomofficial-lgtm/code-blink.git
 cd code-blink
 pip install -e .
 code-blink                    # launch TUI
-code-blink run "do something" --autonomous # (Kinda broken)
-code-blink --model gemma4:31b-cloud # Before using this command do this to set your provider: code-blink --provider [ollama/lmstudio]
+code-blink run "do something" --autonomous
 ```
 
 Requires **Python >= 3.10** and a running **Ollama** (or LMStudio) server on `http://localhost:11434`.
@@ -42,8 +41,11 @@ Requires **Python >= 3.10** and a running **Ollama** (or LMStudio) server on `ht
 | Command | Description |
 |---------|-------------|
 | `/help` | Show help |
-| `/model llama3.2` | Switch model |
-| `/provider ollama` | Switch provider |
+| `/model <name>` | Switch model |
+| `/models` | List available models from provider |
+| `/provider <ollama|lmstudio|openrouter>` | Switch provider |
+| `/apikey <key>` | Set API key (for OpenRouter) |
+| `/mode <normal|autonomous>` | Set agent mode |
 | `/tools` | List available tools |
 | `/config` | Show current config |
 | `/clear` | Clear messages |
@@ -65,8 +67,10 @@ Default config location: `~/.config/code-blink/config.toml`
 
 ```toml
 [provider]
+name = "ollama"
 url = "http://localhost:11434"
 model = "huihui_ai/lfm2.5-abliterated:1.2b-thinking"
+api_key = ""
 timeout = 120
 max_tokens = 4096
 
@@ -75,21 +79,17 @@ permission_level = "write"
 web_search = true
 shell_exec = true
 
-[sandbox]
-enabled = true
-temp_workspace = false
-
 [agent]
 max_retries = 3
 max_context_percent = 70
-verbose_thinking = true
+autonomous = false
 ```
 
 ## How It Works
 
 1. **Agent Loop** (`agent/loop.py`) — multi-turn tool-use loop, `max_iterations` guard, `<thinking>` tag extraction
 2. **Provider** (`provider/ollama.py`, `provider/lmstudio.py`) — streaming chat completion via OpenAI-compatible API, tool call serialization
-3. **Tools** (`tools/file_ops.py`) — `read`, `write`, `edit`, `glob`, `grep`, `ls`, `web_search` (via DuckDuckGo)
+3. **Tools** (`tools/`) — `read`, `write`, `edit`, `glob`, `grep`, `ls`, `tree` (`file_ops.py`), `shell` (`shell.py`, blocked from destructive commands), `web_search` / `web_fetch` (`web_search.py`)
 4. **TUI** (`tui/`) — Textual app with live streaming widgets (`StreamingText`, `ThinkingBlock`, `DiffBlock`)
 5. **System prompt** — instructs the model to wrap reasoning in `<thinking>...</thinking>` and put the final answer after the closing tag
 
@@ -100,7 +100,7 @@ src/code_blink/
 ├── agent/         — AgentLoop, system prompt, tag parsing, multi-turn loop
 ├── config/        — TOML config loading, schema, defaults
 ├── provider/      — Ollama & LMStudio providers, base classes, registry
-├── tools/         — file_ops (read/write/edit/glob/grep/ls), web search, permission layer
+├── tools/         — file_ops, shell (safe command exec), web_search, permission layer
 ├── tui/           — Textual app, chat screen, custom widgets (StreamingText, DiffBlock, ThinkingBlock)
 ├── session/       — Session store
 ├── sandbox/       — Sandbox environment
