@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "code-blink"
 version = "0.1.0"
-description = "A local-first, open-source AI coding agent with Ollama/LMStudio"
+description = "A local-first, open-source AI coding agent with Ollama/LMStudio/Openrouter"
 readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "MIT"}
