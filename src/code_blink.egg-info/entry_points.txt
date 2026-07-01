@@ -1,2 +1,0 @@
-[console_scripts]
-code-blink = code_blink.main:cli
