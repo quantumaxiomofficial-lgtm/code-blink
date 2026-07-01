@@ -69,7 +69,7 @@ Default config location: `~/.config/code-blink/config.toml`
 [provider]
 name = "ollama"
 url = "http://localhost:11434"
-model = "huihui_ai/lfm2.5-abliterated:1.2b-thinking"
+model = "gemma4:31b-cloud"
 api_key = ""
 timeout = 120
 max_tokens = 4096
