@@ -30,7 +30,7 @@ SYSTEM_PROMPT = (
     "- `web_fetch` - fetch a URL\n"
     "- `shell` - run a PowerShell command\n\n"
     "## Platform\n"
-    "- Windows 11 Pro. \\\\ or / both work. Drive letters exist.\n"
+    "- Windows System. \\\\ or / both work. Drive letters exist.\n"
     "- Working directory = where the user launched code-blink from.\n"
     "- Use the shell tool to find user info: `echo %USERNAME%` or `$env:USERNAME`.\n"
     "- Use the shell tool to find the home dir: `echo %USERPROFILE%` or `$env:USERPROFILE`.\n"
